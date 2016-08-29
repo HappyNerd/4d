@@ -1,0 +1,22 @@
+<%include("template/header2.a4d")%>
+			
+			<title>Headers</title>
+			
+				<div class="block_content">
+					<p>Content to be dumped:</p>
+						<%=Session{"UMN_Validate"}%>
+			<!--		<%=get request info("REMOTE-USER")%> -->
+			<!--		<%a4d.debug.dump request info%> -->
+				
+				</div>		<!-- .block_content ends -->
+					
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+								
+			</div>		<!-- .login ends -->
+			</main>
+			
+			
+			
+			
+<%include("template/footer.a4d")%>

@@ -1,0 +1,18 @@
+<%
+if(False)
+	If(Session{"loggedin"}#"True")
+		Session{"message"}:="Please Login"
+		redirect("/login.a4d")
+	Else
+		Case of
+			:(Session{"StudentAccess"}="True")`Is a Student Access
+			
+			:(Session{"CrossOver"}="True")`Is in User Group of "Student & Employee"
+			
+		Else
+			redirect("/permission.a4d") `Access Denied
+			
+		End case
+	End if
+End if
+%>

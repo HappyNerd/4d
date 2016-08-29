@@ -1,0 +1,3 @@
+<%
+redirect("/Students.a4d")`redirect to your default page for the site
+%>

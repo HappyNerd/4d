@@ -1,0 +1,51 @@
+<%
+include("processing/security/checkLogin.a4d")
+
+C_POINTER($vTablePtr;$vKeyFieldPtr)
+C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName)
+$vTablePtr:=->[ICU_Activity]
+$vKeyFieldPtr:=->[ICU_Activity]Act_PKey
+$vtTableDisplayName:="ICU Session Details"
+$vtFileName:="ICU"	`This is the name of the edit page associated with this list
+
+QUERY($vTablePtr->;$vKeyFieldPtr->=Num(_query{"id"}))
+QUERY([People];[People]PeopleID=[Students]PeopleLink)
+QUERY([ICU_Providers];[ICU_Providers]ProviderID=[ICU_Activity]Provider_FKey)
+%>
+
+<%include("template/header.a4d")%>
+	<title>ICU Session</title>			
+	<div id="hld">
+		<div class="wrapper">		<!-- wrapper begins -->
+			
+			<div class="block">
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					<h1><%=[ICU_Providers]FirstName%> <%=[ICU_Providers]LastName%> - <%=[ICU_Activity]Act_SDate%>
+					, <%=[ICU_Activity]Act_STime;HH MM AM PM%> - <%=[ICU_Activity]Act_ETime;HH MM AM PM%></h1>
+				</div>		<!-- .block_head ends -->
+				<div class="block_content">
+				
+							<p><b>Summary:</b> <%=[ICU_Activity]Act_Summary%></p>
+							<p><b>Notes:</b> <%=[ICU_Activity]Notes%></p>
+							<p><b>Type:</b> <%=[ICU_Activity]Type%></p>
+							<p><b>Status:</b> <%=[ICU_Activity]Status%></p>
+						
+						<hr />
+						
+						<p>
+								<input type="submit" class="submit small" value="Ok" onclick="window.history.go(-1);" />
+						</p>
+									
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+					
+			</div>		<!-- .block ends -->
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>

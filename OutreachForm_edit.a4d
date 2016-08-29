@@ -1,0 +1,91 @@
+<%
+
+C_POINTER($vTablePtr;$vKeyFieldPtr)
+C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName)
+$vTablePtr:=->[OutreachRequests]
+$vtTableDisplayName:="Request for DRC Outreach or Training"
+$vtFileName:="OutreachRequests"	`This is the name of the edit page associated with this list
+
+%>
+
+<%include("template/header2.a4d")%>
+	<main id="hld">
+		<a name="main-content"><title>Training and Consultation Request Form</title></a>
+		<div class="wrapper">		<!-- wrapper begins -->
+			
+			<div class="block">
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					<h1><%=$vtTableDisplayName%></h1>
+				</div>		<!-- .block_head ends -->
+				<div class="block_content">
+					<form action="processing/libraries/save/OutreachRequests.a4d" method="post">
+						<p>
+							<label for="requestors">Requestor Name:</label><br />
+							<input id="requestors" type="text" class="text small" name="requestors" value="<%=[OutreachRequests]Requestors%>" /> 
+						</p>
+						<p>
+							<label for="email">Requestor Email:</label><br />
+							<input id="email" type="text" class="text small" name="email" value="<%=[OutreachRequests]RequestorEmail%>" /> 
+						</p>
+						<p>
+							<label for="phone">Requestor Phone:</label><br />
+							<input id="phone" type="text" class="text small" name="phone" value="<%=[OutreachRequests]RequestorPhone%>" /> 
+						</p>
+						<p>
+							<label for="eventname">Event Name:</label><br />
+							<input id="eventname" type="text" class="text small" name="eventname" value="<%=[OutreachRequests]EventName%>" /> 
+						</p>
+						<p>
+							<label for="eventshortdesc">Event Short Description:</label><br />
+							<input id="eventshortdesc" type="text" class="text small" name="eventshortdesc" value="<%=[OutreachRequests]EventShortDesc%>" /> 
+						</p>
+						<p>
+							<label for="department">Department or College:</label><br />
+							<input id="department" type="text" class="text small" name="department" value="<%=[OutreachRequests]DeptCollege%>" /> 
+						</p>
+						<p>
+							<label for="date">Event Date:</label><span id="date_format">(MM/DD/YY)</span>:<br />
+							<input id="date" type="text" class="text small" name="eventdate" aria-describedby="date_format" value="" />
+							<!-- <input id="date" type="text" class="text small date_picker" name="eventdate" aria-describedby="date_format" value="" /> -->
+						</p>
+						<p>
+							<label for="starttime">Start Time:</label><span id="time_format">(HH:MM)</span>:<br />
+							<input id="starttime" type="time" class="text small" name="starttime" aria-describedby="time_format" value="" /> 
+						</p>
+						<p>
+							<label for="endtime">End Time:</label><span id="time_format">(HH:MM)</span>:<br />
+							<input id="endtime" type="time" class="text small" name="endtime" aria-describedby="time_format" value="" /> 
+						</p>
+						<p>
+							<label for="location">Location:</label><br />
+							<input id="location" type="text" class="text small" name="location" value="<%=[OutreachRequests]Location%>" /> 
+						</p>
+						<p>
+							<label for="audience">Audience and Expected Attendance Numbers:</label><br />
+							<input id="audience" type="text" class="text small" name="audience" value="<%=[OutreachRequests]Audience%>" /> 
+						</p>
+						<p>
+							<label for="objectives">Objectives:</label><br />
+							<textarea id="objectives" name="objectives"><%=[OutreachRequests]Objectives%></textarea>
+						</p>						
+						<hr />
+						
+						<p>
+								<input type="submit" class="submit small" value="Submit" />
+								<input type="submit" class="submit small" value="Cancel" onclick="window.history.go(-1);" />
+						</p>
+					
+					</form>					
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+					
+			</div>		<!-- .block ends -->
+		</div>		<!-- wrapper ends -->
+		
+	</main>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>

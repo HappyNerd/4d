@@ -1,0 +1,21 @@
+<%
+C_Longint($vnStart;$vnEnd;$vnPageSize;$vnPageIndex;$vnPageStartIDX;$vnPageEndIDX;$vnBatchCount)
+$vnPageSize:=25
+$vnBatchCount:=9
+
+If(_query{"bst"}="")
+	$vnStart:=1
+Else
+	$vnStart:=Num(_query{"bst"})
+End If
+$vnEnd:=$vnStart+$vnPageSize
+If($vnEnd>Records In Selection($vTablePtr->))
+	$vnEnd:=Records In Selection($vTablePtr->)
+End If
+$batch := Batch.newFromSelection($vTablePtr; $vnPageSize; $vnStart; $vnEnd; 0; 0)
+$rs := RowSet.newFromSelection($vTablePtr; $map;'$batch{"start"}:$batch{"end"}')
+
+Array Longint($anStarts;0)
+$batch->getStarts($anStarts)
+$vnPageIndex:=Find In Array($anStarts;$vnStart)
+%>

@@ -1,0 +1,87 @@
+<%
+include("processing/security/checkUReturn.a4d")
+
+C_POINTER($vTablePtr;$vKeyFieldPtr)
+C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName)
+$vTablePtr:=->[EmpContacts]
+$vKeyFieldPtr:=->[EmpContacts]EmpContactsID
+$vtTableDisplayName:="Case Note"
+$vtFileName:="EmpContacts"	`This is the name of the edit page associated with this list
+
+if(_query{"id"}="-3")
+	CREATE RECORD($vTablePtr->)
+	[EmpContacts]StaffLink:=Session{"StaffID"}
+	[EmpContacts]EmployeeLink:=Num(_query{"EmployeeLink"})
+	[EmpContacts]SessionDate:=Current Date
+	[EmpContacts]Enterer:=Session{"username"}
+	QUERY([Employee];[Employee]EmployeeID=Num(_query{"EmployeeLink"}))
+	QUERY([People];[People]PeopleID=[Employee]PeopleLink)
+else
+	QUERY($vTablePtr->;$vKeyFieldPtr->=Num(_query{"id"}))
+	QUERY([Employee];[Employee]EmployeeID=Num(_query{"EmployeeLink"}))
+	QUERY([People];[People]PeopleID=[Employee]PeopleLink)
+end if
+
+ARRAY TEXT(atEmpContactsListType;0)
+LIST TO ARRAY("EmpContactTypes";atEmpContactsListType)
+
+%>
+
+
+<%include("template/header.a4d")%>
+		<title>Student Case Note</title>			
+	<div id="hld">
+		<div class="wrapper" role="main">		<!-- wrapper begins -->
+			
+			<div class="block">
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					<h1><%=$vtTableDisplayName%> for <%=[People]FirstName%> <%=[People]LastName%> (employee)</h1>
+				</div>		<!-- .block_head ends -->
+				<div class="block_content">
+                        <form action="processing/libraries/save/EmpContacts.a4d" method="post">
+						<input type="hidden" name="ID" value="<%=_query{"id"}%>">
+						<input type="hidden" name="StaffLink" value="<%=[EmpContacts]StaffLink%>">
+						<input type="hidden" name="EmployeeLink" value="<%=[EmpContacts]EmployeeLink%>">
+						<p>
+							<label for="date">Date:</label><br />
+							<input id="date" type="text" class="text small" name="SessionDate" value="<%=[EmpContacts]SessionDate%>" /> 
+						</p>
+						
+						<p>
+							<label for="type">Type:</label><br />
+							<select id="type" name="SessionType">
+								<% a4d.web.buildOptionsFromArrays(atEmpContactsListType;atEmpContactsListType;0;[EmpContacts]SessionType)%>
+							</select>
+						</p>
+						
+						<p>
+							<label for="casenote">Case Notes:</label><br />
+							<textarea id="casenote" name="Notes"><%=[EmpContacts]Notes%></textarea>
+						</p>
+						
+						<hr />
+						
+						<p>
+							
+							<%if(_query{"id"}="-3") | (True)%>
+								<!-- input type="submit" class="submit small" value="Save" <%=choose(_query{"id"}#"-3";"disabled";"")%> /-->
+								<input type="submit" class="submit small" value="Save" />
+							<%end if%>
+								<input type="submit" class="submit small" value="Cancel" onclick="window.history.go(-1);" />
+						</p>
+					
+					
+</form>					
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+					
+			</div>		<!-- .block ends -->
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>

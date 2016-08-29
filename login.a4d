@@ -1,0 +1,3 @@
+<%
+redirect ("processing/security/login.a4d")
+%>

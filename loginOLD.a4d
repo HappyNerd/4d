@@ -1,0 +1,47 @@
+<%include("template/header2.a4d")%>
+			
+			<title>4D Login</title>
+			
+			<div class="block small center login">
+			
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					<h1>4D Login</h1>
+				</div>		<!-- .block_head ends -->
+				
+				
+				
+				
+				<div class="block_content">
+					<%IF(Session{"message"}#"")%>
+					<div class="message info"><p><%=Session{"message"}%></p></div>
+					<%End If%>
+					<form action="processing/security/login.a4d" method="post">
+						<p>
+							<label for="user_name">Username:</label> <br />
+							<input id="user_name" type="text" class="text" name="username" value="" />
+						</p>
+						
+						<p>
+							<label for="password">Password:</label> <br />
+							<input id="password" type="password" class="text" name="password" value="" />
+						</p>
+						
+						<p>
+							<input type="submit" class="submit" value="Login" /> &nbsp; 
+						</p>
+					</form>
+					
+				</div>		<!-- .block_content ends -->
+					
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+								
+			</div>		<!-- .login ends -->
+			</main>
+			
+			
+			
+			
+<%include("template/footer.a4d")%>

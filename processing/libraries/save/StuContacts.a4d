@@ -1,0 +1,22 @@
+<%
+Read Write([StuContacts])
+
+if(_form{"id"}="-3")
+	CREATE RECORD([StuContacts])
+	[StuContacts]ContactID:=SequenceNo (->[SequenceNumbers]CurrentID;->[StuContacts])
+	[StuContacts]StudentLink:=Num(_form{"StudentLink"})
+	[StuContacts]CounselorLink:=Num(_form{"CounselorLink"})
+	[StuContacts]Enterer:=Session{"username"}
+else
+	QUERY([StuContacts];[StuContacts]ContactID=Num(_form{"id"}))
+end if
+
+[StuContacts]ContactType:=_form{"ContactType"}
+[StuContacts]CaseNotes:=_form{"CaseNotes"}
+[StuContacts]SessionDate:=Date(_form{"SessionDate"})
+[StuContacts]DateEntered:=Current Date
+[StuContacts]Modifier:=Session{"username"}
+SAVE RECORD([StuContacts])
+
+redirect("/StuContacts.a4d?StudentLink="+String([StuContacts]StudentLink))
+%>

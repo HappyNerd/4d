@@ -1,0 +1,27 @@
+<%include("processing/security/checkLogin.a4d")%>
+<%include("template/header.a4d")%>
+			
+	<title>Welcome</title>
+	<div id="hld" role="main">
+	
+		<div class="wrapper">		<!-- wrapper begins -->
+	
+			
+			<div class="block">
+			
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					
+					<h1>Welcome to Web 4D!</h1>
+				</div>
+				<div class="block_content">
+					<p>
+					Here you have access to some functionality found in the DRC 4D database. 
+					For starters we have access to student and employee case noting and testing information.  More to come as time 
+					permits.  Depending on your permissions in 4D some pages may not be available.  Suggestions for improvement are welcome
+					and can be sent to Tim and Tonu.  Thanks!
+					</p>
+					<p style="text-align:center;"><img src="DRC_Staff.jpg" alt="DRC Staff group photo"></p>
+				</div>
+<%include("template/footer.a4d")%>

@@ -1,0 +1,12 @@
+If(_query{"search"}="")
+	All Records($vTablePtr->)
+	
+Else
+	QUERY($vTablePtr->;[Activity]Course="@"+_query{"search"}+"@")
+	CREATE SET($vTablePtr->;"Course")
+End if					
+					
+					<form action="<%=$vtFileName%>.a4d" method="get">
+						<label for="search_room"><b>Search Rooms:</b></label>
+						<input type="text" id="search_room" class="text" title="Search by name or username" name="search" value="<%=_query{"search"}%>" />
+					</form>

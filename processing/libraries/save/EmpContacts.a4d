@@ -1,0 +1,20 @@
+<%
+Read Write([EmpContacts])
+
+if(_form{"id"}="-3")
+	Create Record([EmpContacts])
+	[EmpContacts]EmpContactsID:=SequenceNo (->[SequenceNumbers]CurrentID;->[EmpContacts])
+	[EmpContacts]EmployeeLink:=Num(_form{"EmployeeLink"})
+else
+	Query([EmpContacts];[EmpContacts]EmpContactsID=Num(_form{"id"}))
+end if
+
+[EmpContacts]StaffLink:=Num(_form{"StaffLink"})
+[EmpContacts]SessionType:=_form{"SessionType"}
+[EmpContacts]Notes:=_form{"Notes"}
+[EmpContacts]SessionDate:=Date(_form{"SessionDate"})
+[EmpContacts]DateEntered:=Current Date
+Save Record([EmpContacts])
+
+redirect("/EmpContacts.a4d?EmployeeLink="+String([EmpContacts]EmployeeLink))
+%>

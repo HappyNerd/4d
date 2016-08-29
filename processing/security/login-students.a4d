@@ -1,0 +1,14 @@
+<%
+If(Web_ValidatePassword(_form{"username"};_form{"password"}))`User Found
+	Query([Staff];[Staff]FullName=_form{"username"})
+	Session{"StaffID"}:=[Staff]fStaffID
+	Session{"loggedin"}:="True"
+	Session{"message"}:=""
+	Session{"username"}:=_form{"username"}
+	redirect("/default.a4d")
+Else
+	Session{"message"}:="Invalid username or password."	`User not found
+	redirect("/login.a4d")
+End If
+
+%>

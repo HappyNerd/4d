@@ -1,0 +1,128 @@
+<%
+include("processing/security/checkUReturn.a4d")
+
+C_Pointer($vTablePtr;$vKeyFieldPtr)
+C_Text($vtTableDisplayName;$vtTableName;$vtFileName)
+$vTablePtr:=->[Employee]
+$vKeyFieldPtr:=->[Employee]fEmployeeID
+$vtTableDisplayName:="Employees"
+$vtFileName:="Employee"	`This is the name of the edit page associated with this list
+
+if(_query{"search"}="")
+	All Records($vTablePtr->)
+else
+	`Query([Employee];[Employee]x500="@"+_query{"search"}+"@")
+	`Create Set([Employee];"x500")
+	
+	Query([People];[People]fFirstName="@"+_query{"search"}+"@";*)
+	Query([People]; | ;[People]fLastName="@"+_query{"search"}+"@";*)
+	Query([People]; | ;[People]x500="@"+_query{"search"}+"@")
+	RELATE MANY SELECTION([Employee]fPeopleLink) `Added a comment
+	`Create Set([Employee];"Name")
+	`Union("Name";"x500";"Name")
+	`Use Set("Name")
+	`Clear Set("Name")
+	`Clear Set("x500")
+end if
+Create Set([Employee];"Name")
+
+`Now I need to exclude locked Employees
+Query([Employee];[Employee]fLockOut=True)
+`Query([Employee];[Employee]fLockOut=True;*)
+`Query([Employee];&;Session{"username"})
+Create Set([Employee];"Locked")
+DIFFERENCE("Name";"Locked";"Name")
+Use Set("Name")
+Clear Set("Name")
+Clear Set("Locked")
+
+`Order By($vTablePtr->;[Employee]c_class_nbr;>)
+
+$map := """
+ID: [Employee]fEmployeeID;
+PeopleID: [Employee]fPeopleLink"""
+
+include("processing/libraries/output/init.a4d")
+
+$prev := ""
+$next := "" 
+$batches := "" 
+$needBatches := $batch->makeLinks($prev; $batches; $next; "" ; "active") 
+%>
+
+
+<%include("template/header.a4d")%>
+			
+	<title>Employees</title>
+	<div id="hld" role="main">
+	
+		<div class="wrapper">		<!-- wrapper begins -->
+	
+			
+			<div class="block">
+			
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					
+					<h1><%=$vtTableDisplayName%></h1>
+					<form action="<%=$vtFileName%>.a4d" method="get">
+						<label for="4d_search"><b>4D Search:</b></label>
+						<input type="text" class="text" id="4d_search" title="Search by name or username" name="search" value="<%=_query{"search"}%>" />
+					</form>
+					<p align="center"><a href="dstudents.a4d">Go to Students</a></p>
+				</div>		<!-- .block_head ends -->
+				
+				
+				
+				<div class="block_content">
+					<form action="" method="post">
+						<table cellpadding="0" cellspacing="0" width="100%" class="sortable">
+						
+							<thead>
+								<tr>
+									<th>Name</th>
+									<td>&nbsp;</td>
+								</tr>
+							</thead>
+							
+							<tbody>
+							
+<%
+	$row := $rs->getRow
+	while ($rs->next)
+		Query([People];[People]fPeopleID=$row{"PeopleID"})
+%>
+							
+								<tr>
+									<!-- <td><a href="<%=$vtFileName%>_edit.a4d?id=<%=$row{"ID"}%>"><%=[People]fFirstName%> <%=[People]fLastName%></a></td> -->
+									<td><%=[People]fFirstName%> <%=[People]fLastName%></a></td>
+									<td><a href="EmpContacts.a4d?fEmployeeLink=<%=$row{"ID"}%>&__=<%=Random%>">Case Notes</a></td>
+								</tr>
+<% end while %>
+							</tbody>
+							
+						</table>
+						<div class="pagination">
+							<span class="pagination left">
+								<!-- <a href="<%=$vtFileName%>_edit.a4d?id=-3&__=<%=Random%>" class="batch-next">Add <%=$vtTableDisplayName%></a> -->
+							</span>
+							
+							<span class="pagination right">
+								<%=$prev+$batches+$next%>
+							</span>
+						</div>		<!-- .pagination ends -->
+						
+					</form>
+					
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+			</div>		<!-- .block ends -->
+		
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>

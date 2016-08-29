@@ -1,0 +1,20 @@
+<%include("template/header.a4d")%>
+			
+	<title>Access Denied</title>
+	<div id="hld" role="main">
+	
+		<div class="wrapper">		<!-- wrapper begins -->
+	
+			
+			<div class="block">
+			
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					
+					<h1>Access Denied</h1>
+					<p align="center"><b>You are not autherized to access that page says the computer. 
+					Use the browser back button to go back.</b>
+					</p>
+				</div>
+<%include("template/footer.a4d")%>

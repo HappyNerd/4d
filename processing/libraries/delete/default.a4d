@@ -1,0 +1,27 @@
+<%
+include("/processing/security/check.a4d")
+
+C_Text($vtParams)
+C_Pointer($vTablePtr;$vFieldPtr)
+
+$vTablePtr:=Table(Num(_query{"tblno"}))
+$vFieldPtr:=Field(Num(_query{"tblno"});Num(_query{"keyno"}))
+
+Read Write($vTablePtr->)
+Query($vTablePtr->;$vFieldPtr->=Num(_query{"id"}))
+If(Records in Selection($vTablePtr->)=1)
+	Delete Record($vTablePtr->)
+End If
+
+$vtParams:=$vtParams+choose($vtParams#"";"&";"")
+$vtParams:=$vtParams+choose(_query{"bst"}#"";"bst="+_query{"bst"};"")
+
+$vtParams:=$vtParams+choose($vtParams#"";"&";"")
+$vtParams:=$vtParams+choose(_query{"search"}#"";"search="+url encode(_query{"search"});"")
+
+IF($vtParams#"")
+	redirect("/"+_query{"pgName"}+".a4d?"+$vtParams)
+else
+	redirect("/"+_query{"pgName"}+".a4d")
+end if
+%>

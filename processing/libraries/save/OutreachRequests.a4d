@@ -1,0 +1,27 @@
+<%
+Read Write([OutreachRequests])
+
+Create Record([OutreachRequests])
+
+[OutreachRequests]OutreachRequestsID:=SequenceNo (->[SequenceNumbers]CurrentID;->[OutreachRequests])
+[OutreachRequests]DateCreated:=Current Date
+[OutreachRequests]Status:="New"
+[OutreachRequests]Requestors:=_form{"requestors"}
+[OutreachRequests]RequestorEmail:=_form{"email"}
+[OutreachRequests]RequestorPhone:=Gen_FormatPhone(_form{"phone"})
+[OutreachRequests]EventName:=_form{"eventname"}
+[OutreachRequests]EventShortDesc:=_form{"eventshortdesc"}
+[OutreachRequests]DeptCollege:=_form{"department"}
+[OutreachRequests]EventDate:=Date(_form{"eventdate"})
+[OutreachRequests]StartTime:=Time(_form{"starttime"})
+[OutreachRequests]EndTime:=Time(_form{"endtime"})
+[OutreachRequests]Location:=_form{"location"}
+[OutreachRequests]Audience:=_form{"audience"}
+[OutreachRequests]Objectives:=_form{"objectives"}
+
+Save Record([OutreachRequests])
+
+OutreachReqSendEmail([OutreachRequests]OutreachRequestsID)
+
+redirect("https://4d.diversity.umn.edu/OutreachForm_confirm.a4d")
+%> 

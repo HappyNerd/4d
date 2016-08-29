@@ -1,0 +1,68 @@
+<%
+include("processing/security/checkUReturn.a4d")
+
+C_POINTER($vTablePtr;$vKeyFieldPtr)
+C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName;$vtEmpStatus)
+$vTablePtr:=->[Employee]
+$vKeyFieldPtr:=->[Employee]EmployeeID
+$vtTableDisplayName:="Emplopyee File"
+$vtFileName:="Employee"	`This is the name of the edit page associated with this list
+
+QUERY($vTablePtr->;$vKeyFieldPtr->=Num(_query{"id"}))
+QUERY([People];[People]PeopleID=[Employee]PeopleLink)
+If(Records in selection([Employee])=1)
+	QUERY([EmpContacts];[EmpContacts]EmployeeLink=$vKeyFieldPtr->)
+	ORDER BY([EmpContacts];[EmpContacts]SessionDate;>)
+	LAST RECORD([EmpContacts])
+	Case of
+		:(([Employee]EmploymentStatus="False")|([Employee]EmploymentStatus=""))
+			$vtEmpStatus:=""
+		:([Employee]EmploymentStatus="FT")
+			$vtEmpStatus:="Full Time"
+		:([Employee]EmploymentStatus="PT")
+			$vtEmpStatus:="Part Time"
+	Else
+		$vtEmpStatus:=""
+	End case
+End if
+
+%>
+
+
+<%include("template/header.a4d")%>
+	<title>Employee File</title>			
+	<div id="hld">
+		<div class="wrapper">		<!-- wrapper begins -->
+			
+			<div class="block">
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					<h1><%=[People]FirstName%> <%=[People]LastName%> (employee)</h1>
+				</div>		<!-- .block_head ends -->
+				<div class="block_content">
+				
+							<p><b>Name:</b> <%=[People]FullName%> <%=choose([Employee]Inactive;"(inactive)";"(active)")%></p>
+							<p><b>Internet ID (x500):</b> <%=[People]x500%></p>
+							<p><b>EmplID:</b> <%=[People]Emplid%></p>
+							<p><b>Employment Status:</b> <%=$vtEmpStatus%></p>
+							<p><b>Type:</b> <%=[Employee]Type%></p>
+							<p><b>Last Contact Date:</b> <%=[EmpContacts]SessionDate%></p>
+						
+						<hr />
+						
+						<p>
+								<input type="submit" class="submit small" value="Ok" onclick="window.history.go(-1);" />
+						</p>
+									
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+					
+			</div>		<!-- .block ends -->
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>

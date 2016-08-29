@@ -1,0 +1,8 @@
+<%
+
+IF(Session{"loggedin"}#"True")
+	Session{"message"}:="Please Login"
+	redirect("/login.a4d")
+End IF
+
+%>

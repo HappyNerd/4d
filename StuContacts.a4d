@@ -1,0 +1,105 @@
+<%
+include("processing/security/checkStudent.a4d")
+
+C_POINTER($vTablePtr;$vKeyFieldPtr)
+C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName)
+$vTablePtr:=->[StuContacts]
+$vKeyFieldPtr:=->[StuContacts]ContactID
+$vtTableDisplayName:="Case Notes"
+$vtFileName:="StuContacts"	`This is the name of the edit page associated with this list
+
+QUERY([StuContacts];[StuContacts]StudentLink=Num(_query{"StudentLink"}))
+ORDER BY($vTablePtr->;[StuContacts]SessionDate;<)
+
+$map := """
+ID: [StuContacts]ContactID;
+Date: [StuContacts]SessionDate;
+Type: [StuContacts]ContactType;
+CounselorID: [StuContacts]CounselorLink"""
+
+QUERY([Students];[Students]StudentID=Num(_query{"StudentLink"}))
+QUERY([People];[People]PeopleID=[Students]PeopleLink)
+
+include("processing/libraries/output/init.a4d")
+
+$prev := ""
+$next := "" 
+$batches := "" 
+$needBatches := $batch->makeLinks($prev; $batches; $next; "?StudentLink="+_query{"StudentLink"}; "active") 
+%>
+
+
+<%include("template/header.a4d")%>
+	<title>Student Case Notes</title>		
+	
+	<div id="hld">
+	
+		<div class="wrapper">		<!-- wrapper begins -->
+	
+			
+			<div class="block">
+			
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					
+					<h1><%=[People]FirstName%> <%=[People]LastName%> (student) <%=$vtTableDisplayName%></h1>
+							<span class="pagination right">
+								<a href="<%=$vtFileName%>_edit.a4d?id=-3&StudentLink=<%=_query{"StudentLink"}%>" class="batch-next">Add <%=$vtTableDisplayName%></a>
+							</span>					
+				</div>		<!-- .block_head ends -->
+				
+				
+				
+				<div class="block_content">
+					<form action="" method="post">
+						<table cellpadding="0" cellspacing="0" width="100%" class="sortable">
+						
+							<thead>
+								<tr>
+									<th>Date</th>
+									<th>Type</th>
+									<th>Counselor</th>
+								</tr>
+							</thead>
+							
+							<tbody>
+							
+<%
+	$row := $rs->getRow
+	While ($rs->next)
+		QUERY([Staff];[Staff]StaffID=$row{"CounselorID"})
+%>
+							
+								<tr>
+									<td><a href="<%=$vtFileName%>_edit.a4d?id=<%=$row{"ID"}%>&StudentLink=<%=_query{"StudentLink"}%>&__=<%=Random%>"><%=$row{"Date"}%></a></td>
+									<td><%=$row{"Type"}%></td>
+									<td><%=[Staff]FullName%></td>
+								</tr>
+<% End while %>
+							</tbody>
+							
+						</table>
+						<div class="pagination">
+							<span class="pagination left">
+								<a href="<%=$vtFileName%>_edit.a4d?id=-3&StudentLink=<%=_query{"StudentLink"}%>" class="batch-next">Add <%=$vtTableDisplayName%></a>
+							</span>
+							
+							<span class="pagination right">
+								<%=$prev+$batches+$next%>
+							</span>
+						</div>		<!-- .pagination ends -->
+						
+					</form>
+					
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+			</div>		<!-- .block ends -->
+		
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>

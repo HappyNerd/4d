@@ -1,0 +1,6 @@
+<%
+Session{"loggedin"}:="False"
+Session{"message"}:="You have logged out."
+Session{"username"}:=""
+redirect("/4d/login.a4d")
+%>

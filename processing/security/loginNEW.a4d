@@ -1,0 +1,69 @@
+<%
+
+`If(Web_ValidateUMNPassword(get request info("REMOTE-USER")))`User Found
+`If(Web_ValidatePassword(_form{"username"};_form{"password"}))`User Found
+$InternetID:=StripTheEmail(get request info("REMOTE-USER"))
+
+   ` Query([Staff];[Staff]FullName=_form{"username"})
+   Query([Staff];[Staff]InternetID=$InternetID;*)
+   query([Staff];&;[Staff]Active=True)
+   
+   if(Records in Selection([Staff])>0)
+	Session{"StaffID"}:=[Staff]StaffID
+	Session{"loggedin"}:="True"
+	Session{"username"}:=_form{"username"}
+	Session{"UReturnAccess"}:=choose([Staff]EmpAdvisor;"True";"False")`Allow to use UReturn pages?
+	Session{"StudentAccess"}:=choose([Staff]StuSpecialist;"True";"False")`Allow to use Student Access pages?
+	Session{"CrossOver"}:=choose(Web_AccessStudentsUReturn(Session{"username"});"True";"False") `Allow user to cross over to other unit's pages?
+	Session{"IsICUStaff"}:=choose(Web_AccessICU(Session{"username"});"True";"False") `Allow ICU staff to use ICU a4D pages?
+	Session{"ProviderID"}:=0
+`	Session{"IsDRCStaff"}:="True" `Allow any DRC Staff to other DRC's a4D pages
+	Session{"message"}:=""
+	Session{"UMN_Validate"}:=get request info("REMOTE-USER")
+	
+	Case of
+	  : (Session{"UMN_Validate"}="timfitz@umn.edu")
+	    redirect ("/headers.a4d")
+		
+	  : ((Session{"username"}="Designer") | (Session{"username"}="Scott Marshall")|(Session{"username"}="Tonu Mikk"))
+	    Session{"UReturnAccess"}:="True"
+	    Session{"StudentAccess"}:="True"
+		Session{"CrossOver"}:="False"
+		redirect("/default.a4d")
+		
+	  : (Session{"UReturnAccess"}="True")
+	    redirect("/Employee.a4d")
+		
+	  : (Session{"StudentAccess"}="True")
+	    redirect("/default.a4d")
+		
+	  : (Session{"IsICUProvider"}="True")
+	    $username:=Session{"username"}
+	    $vtFirstName:=substring($username;1;position(" ";$username)-1)
+		`write($vtFirstName+"|")
+		$vtLastName:=substring($username;position(" ";$username)+1;length($username))
+		`write($vtLastName)
+	    Query([ICU_Providers];[ICU_Providers]FirstName=$vtFirstName;*)
+		Query([ICU_Providers];&;[ICU_Providers]LastName=$vtLastName;*)
+		Query([ICU_Providers];&;[ICU_Providers]="Captioner";*)
+		Query([ICU_Providers];|;[ICU_Providers]="Salary")
+		`write(records in selection([ICU_Providers]))
+		`write($vtFirstName+" "+$vtLastName)
+	    Session{"ProviderID"}:=[ICU_Providers]ProviderID
+		`write(Session{"ProviderID"})
+		redirect("/ICU.a4d")
+		
+	 ` : (Session{"IsDRCStaff"}="True")
+	  : (Session{"loggedin"}="True")
+		redirect("/Welcome.a4d")
+		 
+	Else
+	    `Session{"message"}:="You are not allowed to use this yet."	`User not found
+	    redirect("/permission.a4d")
+	End case
+Else
+	Session{"message"}:="Invalid username or password."	`User not found
+	redirect("/login.a4d")
+End if
+
+%>

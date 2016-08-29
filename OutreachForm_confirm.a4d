@@ -1,0 +1,35 @@
+<%
+
+C_POINTER($vTablePtr;$vKeyFieldPtr)
+C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName)
+$vTablePtr:=->[OutreachRequests]
+$vtTableDisplayName:="Outreach Request Submitted"
+$vtFileName:="OutreachRequests"	`This is the name of the edit page associated with this list
+
+%>
+
+<%include("template/header2.a4d")%>
+	<main id="hld">
+		<a name="main-content"><title>Request Submitted</title></a>
+		<div class="wrapper">		<!-- wrapper begins -->
+			
+			<div class="block">
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					<h1><%=$vtTableDisplayName%></h1>
+				</div>		<!-- .block_head ends -->
+				<div class="block_content"> 
+					<p>Thank you for your outreach/training request. We will contact you for more details soon. 
+					Meanwhile, visit <a href="http://diversity.umn.edu/disability">diversity.umn.edu/disability</a> to learn more about our work or submit another <a href="OutreachForm_edit.a4d">outreach/training request</a>.</p>
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+					
+			</div>		<!-- .block ends -->
+		</div>		<!-- wrapper ends -->
+		
+	</main>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>

@@ -1,0 +1,125 @@
+<%
+include("processing/security/check.a4d")
+
+C_Pointer($vTablePtr;$vKeyFieldPtr)
+C_Text($vtTableDisplayName;$vtTableName;$vtFileName)
+$vTablePtr:=->[dw_courses]
+$vKeyFieldPtr:=->[dw_courses]c_class_nbr
+$vtTableDisplayName:="Courses"
+$vtFileName:="dw_courses"	`This is the name of the edit page associated with this list
+
+if(_query{"search"}="")
+	All Records($vTablePtr->)
+else
+	Query([dw_courses];[dw_courses]c_class_nbr="@"+_query{"search"}+"@";*)
+	Query([dw_courses]; | ;[dw_courses]c_descr="@"+_query{"search"}+"@")
+end if
+Order By($vTablePtr->;[dw_courses]c_class_nbr;>)
+
+$map := """
+ID: [dw_courses]c_class_nbr;
+Name: [dw_courses]n_name_display;
+Desc: [dw_courses]c_descr;
+Phone: [dw_courses]staff_phone"""
+
+include("processing/libraries/output/init.a4d")
+
+$prev := ""
+$next := "" 
+$batches := "" 
+$needBatches := $batch->makeLinks($prev; $batches; $next; "" ; "active") 
+%>
+
+
+<%include("template/header.a4d")%>
+			
+	
+	<div id="hld">
+	
+		<div class="wrapper">		<!-- wrapper begins -->
+	
+			
+			<div class="block">
+			
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					
+					<h2><%=$vtTableDisplayName%></h2>
+					<form action="<%=$vtFileName%>.a4d" method="get">
+						<input type="text" class="text" name="search" value="<%=_query{"search"}%>" />
+					</form>
+				</div>		<!-- .block_head ends -->
+				
+				
+				
+				<div class="block_content">
+					<form action="" method="post">
+						<table cellpadding="0" cellspacing="0" width="100%" class="sortable">
+						
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Description</th>
+									<th>Phone</th>
+									<td>&nbsp;</td>
+								</tr>
+							</thead>
+							
+							<tbody>
+							
+<%
+	$row := $rs->getRow
+	while ($rs->next)
+%>
+							
+								<tr>
+									<td><a href="<%=$vtFileName%>_edit.a4d?id=<%=$row{"ID"}%>&__=<%=Random%>"><%=$row{"Name"}%></a></td>
+									<td><%=$row{"Desc"}%></td>
+									<td><%=$row{"Phone"}%></td>
+									<td class="delete"><a href="#" onclick="deleteRow(<%=$row{"ID"}%>);">Delete</a></td>
+								</tr>
+<% end while %>
+							</tbody>
+							
+						</table>
+						<div class="pagination">
+							<span class="pagination left">
+								<a href="<%=$vtFileName%>_edit.a4d?id=-3" class="batch-next">Add <%=$vtTableDisplayName%></a>
+							</span>
+							
+							<span class="pagination right">
+								<%=$prev+$batches+$next%>
+							</span>
+						</div>		<!-- .pagination ends -->
+						
+					</form>
+					
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+			</div>		<!-- .block ends -->
+		
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+<script>
+	function deleteRow(id){
+		var r = confirm("Are you sure you want to delete this <%=$vtTableDisplayName%> record?");
+		var url = "processing/libraries/delete/?id="+id+"&pgName=<%=$vtFileName%>&tblno=<%=Table($vTablePtr)%>&keyno=<%=Field($vKeyFieldPtr)%>";
+		<%
+			IF(_query{"bst"}#"")
+				write("url = url +'&bst="+_query{"bst"}+"'")
+			End If
+			IF(_query{"search"}#"")
+				write("url = url +'&search="+url encode(_query{"search"})+"'")
+			End If
+		%>
+		if (r == true) {
+			window.location = url;
+		}
+	}
+</script>
+	
+<%include("template/footer.a4d")%>

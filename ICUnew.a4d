@@ -1,0 +1,158 @@
+<%
+include("processing/security/checkLogin.a4d")
+
+C_Pointer($vTablePtr;$vKeyFieldPtr)
+C_Text($vtTableDisplayName;$vtTableName;$vtFileName)
+$vTablePtr:=->[ICU_Activity]
+$vKeyFieldPtr:=->[ICU_Activity]Act_PKey
+$vtTableDisplayName:="ICU"
+$vtFileName:="ICU"	`This is the name of the edit page associated with this list
+
+Array Text($provider;0)
+Array LongInt($providerid;0)
+Query([ICU_Providers];[ICU_Providers]Active=True;*)
+Query([ICU_Providers];&;[ICU_Providers]ServiceType="Salary";*)
+Query([ICU_Providers];|;[ICU_Providers]ServiceType="Captioner")
+SELECTION TO ARRAY([ICU_Providers]Name;$provider)
+SELECTION TO ARRAY([ICU_Providers]ProviderID;$providerID)
+`Write("Case 1")
+`Write("Search:"+_query{"search"})
+`Write("Provider:"+_query{"provider"})
+`Write("ProvID:"+Session{"ProviderID"})
+
+Case of
+	:((_query{"search"}="all")|(_query{"provider"}="all"))
+`		Write("Case 2")
+		QUERY($vTablePtr->;[ICU_Activity]Act_SDate>=Current date(*))
+		
+	:(_query{"provider"}#"")
+`		Write("Case 3")
+`		Write(_query{"provider"})
+		QUERY([ICU_Providers];[ICU_Providers]Name=_query{"provider"})
+		RELATE MANY SELECTION([ICU_Activity]Provider_FKey)
+		QUERY SELECTION($vTablePtr->;[ICU_Activity]Act_SDate>=Current date(*))
+		
+	:(_query{"search"}#"")
+`		Write("Case 4")
+`		Write(_query{"search"})
+		QUERY([ICU_Providers];[ICU_Providers]FirstName="@"+_query{"search"}+"@";*)
+		QUERY([ICU_Providers];|;[ICU_Providers]LastName="@"+_query{"search"}+"@")
+		RELATE MANY SELECTION([ICU_Activity]Provider_FKey)
+		QUERY SELECTION($vTablePtr->;[ICU_Activity]Act_SDate>=Current date(*))
+
+	:((_query{"search"}="")&(_query{"provider"}="")&(Session{"IsICUProvider"}="True")&(Session{"ProviderID"}#0))
+`		Write("Case 5")
+		QUERY($vTablePtr->;[ICU_Activity]Provider_FKey=Session{"ProviderID"};*)
+		QUERY($vTablePtr->;&;[ICU_Activity]Act_SDate>=Current date(*))
+
+else
+`		Write("Case 6")
+		QUERY($vTablePtr->;[ICU_Activity]Act_SDate>=Current date(*))
+End case
+`Write("Case 7")
+ORDER BY($vTablePtr->;[ICU_Activity]Act_SDate;>;[ICU_Activity]Act_STime;>)
+
+$map := """
+ID: [ICU_Activity]Act_PKey;
+ProviderID: [ICU_Activity]Provider_FKey;
+ConsumerID: [ICU_Activity]Consumer_FKey"""
+
+include("processing/libraries/output/init.a4d")
+
+$prev := ""
+$next := "" 
+$batches := "" 
+$needBatches := $batch->makeLinks($prev; $batches; $next; "" ; "active") 
+%>
+
+
+<%include("template/header.a4d")%>
+			
+	<title>ICU</title>
+	<div id="hld">
+	
+		<div class="wrapper">		<!-- wrapper begins -->
+	
+			<div class="block">
+			
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					
+					<h1><%=$vtTableDisplayName%></h1>
+					
+					<form action="<%=$vtFileName%>.a4d" method="get">
+						<label for="search_provider"><b>&nbsp;&nbsp;Search Providers:</b></label>
+						<input type="text" id="search_provider" class="text" title="Search Providers" name="search" value="<%=_query{"search"}%>" />
+					</form>						
+					<form method="get">
+					<label for="provider">Provider:</label>
+					<select id="provider" name="provider" onchange="this.form.submit();">
+						<option <%=choose(_query{"Provider_Selected"}="";"Selected";"")%>></option>
+						<option>All</option>
+					<%for($i;1;size of array($provider)) %><option><%=$provider{$i}%></option> 
+                <% end for %> 
+					</SELECT> 
+					</form>
+					
+				</div>		<!-- .block_head ends -->
+				
+				<div class="block_content">
+					<form action="" method="post">
+						<table cellpadding="0" cellspacing="0" width="100%" class="sortable">
+						
+							<thead>
+								<tr>
+									<th>Provider</th>
+									<th>Date</th>
+									<th>Start</br>Time</th>
+									<th>End</br>Time</th>
+									<th>Summary</th>
+								<!--	<th>Consumer</th> -->
+								</tr>					
+							</thead>
+							
+							<tbody>
+							
+<%
+	$row := $rs->getRow
+	while ($rs->next)
+		Query([ICU_Providers];[ICU_Providers]ProviderID=$row{"ProviderID"})
+		Query([ICU_Consumers];[ICU_Consumers]ConsumerID=$row{"ConsumerID"})
+%>
+							
+								<tr>
+									<td><a href="<%=$vtFileName%>_disp.a4d?id=<%=$row{"ID"}%>"><%=[ICU_Providers]FirstName%> <%=[ICU_Providers]LastName%></a></td>
+									<td><%=[ICU_Activity]Act_SDate%></td>
+									<td><%=[ICU_Activity]Act_STime;HH MM AM PM%></td>
+									<td><%=[ICU_Activity]Act_ETime;HH MM AM PM%></td>
+									<td><%=[ICU_Activity]Act_Summary%></td>
+									<!-- <td><%=[ICU_Consumers]FirstName%> <%=[ICU_Consumers]LastName%> </td> -->
+								</tr>
+<% end while %>
+							</tbody>
+							
+						</table>
+						<div class="pagination">
+							<span class="pagination left">
+								<!-- <a href="<%=$vtFileName%>_edit.a4d?id=-3" class="batch-next">Add <%=$vtTableDisplayName%></a> -->
+							</span>
+							
+							<span class="pagination right">
+								<%=$prev+$batches+$next%>
+							</span>
+						</div>		<!-- .pagination ends -->
+						
+					</form>
+					
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+			</div>		<!-- .block ends -->
+		
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>

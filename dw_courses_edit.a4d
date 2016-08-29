@@ -1,0 +1,73 @@
+<%
+include("processing/security/check.a4d")
+
+C_Pointer($vTablePtr;$vKeyFieldPtr)
+C_Text($vtTableDisplayName;$vtTableName;$vtFileName)
+$vTablePtr:=->[dw_courses]
+$vKeyFieldPtr:=->[dw_courses]c_class_nbr
+$vtTableDisplayName:="Courses"
+$vtFileName:="dw_courses"	`This is the name of the edit page associated with this list
+
+if(_query{"id"}="-3")
+	New Record($vTablePtr->)
+else
+	Query($vTablePtr->;$vKeyFieldPtr->=_query{"id"})
+end if
+
+%>
+
+
+<%include("template/header.a4d")%>
+			
+	<div id="hld">
+		<div class="wrapper">		<!-- wrapper begins -->
+			
+			<div class="block">
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					<h2><%=$vtTableDisplayName%></h2>
+				</div>		<!-- .block_head ends -->
+				<div class="block_content">
+<form action="" method="post">
+					
+						<p>
+							<label>Name:</label><br />
+							<input type="text" class="text small" value="<%=[dw_courses]n_name_display%>" /> 
+						</p>
+						
+						<p>
+							<label>Phone:</label><br />
+							<input type="text" class="text medium" value="<%=[dw_courses]staff_phone%>" /> 
+						</p>
+						
+						<p>
+							<label>Big input label:</label><br />
+							<input type="text" class="text big" />
+						</p>
+						
+						<p>
+							<label>Textarea label:</label><br />
+							<textarea class="wysiwyg"></textarea>
+						</p>
+						
+						<hr />
+						
+						<p>
+							<input type="submit" class="submit small" value="Cancel" />
+							<input type="submit" class="submit small" value="Save" />
+						</p>
+					
+					
+</form>					
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+					
+			</div>		<!-- .block ends -->
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>
