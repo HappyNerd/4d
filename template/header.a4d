@@ -48,7 +48,7 @@
 					<li><a href="../Employee.a4d" class="active">Employees</a></li>
 					<li><a href="../Testing.a4d" class="active">Testing</a></li>
 					<li><a href="../ICU.a4d" class="active">ICU</a></li>
-					<li><a href="https://4d.diversity.umn.edu/Shibboleth.sso/Logout?return=https%3a%2f%2fidp2.shib.umn.edu%2fidp%2fLogoutUMN">Logout</a></li>
+					<li><a href="https://4d.diversity.umn.edu/Shibboleth.sso/Logout?return=https://login.umn.edu/idp/LogoutUMN">Logout</a></li>
 					<!-- <li><a href="../processing/security/logout.a4d" class="active">Logout</a></li>
                     This was used with 4D based login.  Commented out by T.M. on 4/8/2016	-->
 				</ul>
