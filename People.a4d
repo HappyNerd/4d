@@ -50,6 +50,9 @@ $needBatches := $batch->makeLinks($prev; $batches; $next; "")
 					<div class="bheadr"></div>
 					
 					<h1><%=$vtTableDisplayName%></h1>
+						<span class="pagination right">
+							<a href="AddPeople.a4d">Add <%=$vtTableDisplayName%></a>
+						</span>
 					<form action="<%=$vtFileName%>.a4d" method="get">
 						<label for="4d_search"><b>4D Search:</b></label>
 						<input type="text" class="text" id="4d_search" title="Search by name or username" name="search" value="<%=_query{"search"}%>" />

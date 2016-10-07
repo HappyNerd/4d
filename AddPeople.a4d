@@ -1,0 +1,45 @@
+<%
+`Add 4d code
+
+%>
+
+
+<%include("template/header.a4d")%>
+		<title>Add People</title>			
+	<div id="hld">
+		<div class="wrapper" role="main">		<!-- wrapper begins -->
+			
+			<div class="block">
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					<h1>Add People </h1>
+				</div>		<!-- .block_head ends -->
+				<div class="block_content">
+                        <form action="processing/libraries/save/AddPeople.a4d" method="post">
+						<p>
+							<label for="FirstName">First Name:</label><br />
+							<input id="FirstName" type="text" class="text small" name="FirstName" />
+						</p><p>
+							<label for="LastName">Last Name:</label><br />
+							<input id="LastName" type="text" class="text small" name="LastName" />
+						</p><p>
+							<label for="UMNEmail">UMN email address:</label><br />
+							<input id="UMNEmail" type="text" class="text small" name="UMNEmail" />
+						</p><p>
+							<input type="submit" class="submit small" value="Lookup" />
+							</p>
+					
+					
+</form>					
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+					
+			</div>		<!-- .block ends -->
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>
