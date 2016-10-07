@@ -30,7 +30,7 @@ include("processing/libraries/output/init.a4d")
 $prev := ""
 $next := "" 
 $batches := "" 
-$needBatches := $batch->makeLinks($prev; $batches; $next; "") 
+$needBatches := $batch->makeLinks($prev; $batches; $next; "?search="+_query{"search"}; "") 
 
 %>
 
