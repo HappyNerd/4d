@@ -1,0 +1,46 @@
+<%
+include("processing/security/checkUReturn.a4d")
+
+C_POINTER($vTablePtr; $vKeyFieldPtr)
+C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName)
+$vTablePtr:=->[People]
+$vKeyFieldPtr:=->[People]PeopleID
+$vtTableDisplayName:="People File"
+$vtFileName:="People"	`This is the name of the edit page associated with this list
+
+QUERY($vTablePtr->;$vKeyFieldPtr->=Num(_query{"id"}))
+%>
+
+
+<%include("template/header.a4d")%>
+	<title>People File</title>			
+	<div id="hld">
+		<div class="wrapper">		<!-- wrapper begins -->
+			
+			<div class="block">
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					<h1><%=[People]FirstName%> <%=[People]LastName%> (People)</h1>
+				</div>		<!-- .block_head ends -->
+				<div class="block_content">
+				
+							<p><b>Name:</b> <%=[People]FullName%> </p>
+						
+						<hr />
+						
+						<p>
+								<input type="submit" class="submit small" value="Ok" onclick="window.history.go(-1);" />
+						</p>
+									
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+					
+			</div>		<!-- .block ends -->
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>
