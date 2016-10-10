@@ -1,0 +1,71 @@
+<%
+`Add 4d code
+
+%>
+
+
+<%include("template/header.a4d")%>
+		<title>Add People Lookup Matches</title>			
+	<div id="hld">
+		<div class="wrapper" role="main">		<!-- wrapper begins -->
+			
+			<div class="block">
+				<div class="block_head">
+					<div class="bheadl"></div>
+					<div class="bheadr"></div>
+					<h1>Add People Lookup Matches </h1>
+				</div>		<!-- .block_head ends -->
+				<div class="block_content">
+					<p>You entered: <% ` Add 4D code %>
+					<p>The table below shows possible matches in the database.  If you see a match
+					with the name you entered follow the Case Notes link view or add consultations.  Otherwise 
+					click "Add New Person" button below.
+						<table cellpadding="0" cellspacing="0" width="100%" class="sortable">
+						
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Internet ID</th>
+									<th>Case Notes</th>
+								</tr>
+							</thead>
+							
+							<tbody>
+							
+<%
+` Add 4D code
+%>
+							
+								<tr>
+									<td>Sam Goody</td>
+									<td>samg0001</td>
+									<td>Case Notes</td>
+								</tr>
+																<tr>
+									<td>Dan Montgamery</td>
+									<td>mont0001</td>
+									<td>Case Notes</td>
+								</tr>
+<% `Add 4D code %>
+							</tbody>
+							
+						</table>
+						<div class="pagination">						
+							<span class="pagination right">
+								<% `=$prev+$batches+$next%>
+							</span>
+						</div>		<!-- .pagination ends -->
+						<p>
+							<a href="AddPeople_edit.a4d">Add New Person</a>
+						</p>
+				</div>		<!-- .block_content ends -->
+				
+				<div class="bendl"></div>
+				<div class="bendr"></div>
+					
+			</div>		<!-- .block ends -->
+		</div>						<!-- wrapper ends -->
+		
+	</div>		<!-- #hld ends -->
+	
+<%include("template/footer.a4d")%>
