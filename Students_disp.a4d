@@ -16,6 +16,9 @@ If(Records in selection([Students])=1)
 	LAST RECORD([StuContacts])
 End if
 
+$map := """
+ID: [Students]StudentID;
+PeopleID: [Students]PeopleLink"""
 %>
 
 
@@ -31,12 +34,14 @@ End if
 					<h1><%=[People]FirstName%> <%=[People]LastName%> (student)</h1>
 				</div>		<!-- .block_head ends -->
 				<div class="block_content">
-				
-							<p><b>Name:</b> <%=[People]FullName%> <%=choose([Students]Archive;"(archived)";"(active)")%></p>
-							<p><b>Internet ID (x500):</b> <%=[People]x500%></p>
-							<p><b>EmplID:</b> <%=[People]Emplid%></p>
-							<p><b>Last Contact Date:</b> <%=[StuContacts]SessionDate%></p>
-						
+					<h2>Student Details</h2>
+							<ul>
+							<li><b>Name:</b> <%=[People]FullName%> <%=choose([Students]Archive;"(archived)";"(active)")%></li>
+							<li><b>Internet ID (x500):</b> <%=[People]x500%></li>
+							<li><b>EmplID:</b> <%=[People]Emplid%></li>
+							<li><b>Last Contact Date:</b> <%=[StuContacts]SessionDate%></li>
+							<li><a href="StuContacts.a4d?StudentLink=<%=[Students]StudentID%>&__=<%=Random%>">Casenotes</a></li>
+							</ul>
 						<hr />
 						
 						<p>

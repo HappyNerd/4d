@@ -41,14 +41,16 @@ End if
 					<h1><%=[People]FirstName%> <%=[People]LastName%> (employee)</h1>
 				</div>		<!-- .block_head ends -->
 				<div class="block_content">
-				
-							<p><b>Name:</b> <%=[People]FullName%> <%=choose([Employee]Inactive;"(inactive)";"(active)")%></p>
-							<p><b>Internet ID (x500):</b> <%=[People]x500%></p>
-							<p><b>EmplID:</b> <%=[People]Emplid%></p>
-							<p><b>Employment Status:</b> <%=$vtEmpStatus%></p>
-							<p><b>Type:</b> <%=[Employee]Type%></p>
-							<p><b>Last Contact Date:</b> <%=[EmpContacts]SessionDate%></p>
-						
+					<h2>Employee Details</h2>
+							<ul>
+							<li><b>Name:</b> <%=[People]FullName%> <%=choose([Employee]Inactive;"(inactive)";"(active)")%></li>
+							<li><b>Internet ID (x500):</b> <%=[People]x500%></li>
+							<li><b>EmplID:</b> <%=[People]Emplid%></li>
+							<li><b>Employment Status:</b> <%=$vtEmpStatus%></li>
+							<li><b>Type:</b> <%=[Employee]Type%></li>
+							<li><b>Last Contact Date:</b> <%=[EmpContacts]SessionDate%></li>
+							<li><a href="EmpContacts.a4d?EmployeeLink=<%=[Employee]EmployeeID%>&__=<%=Random%>">Casenotes</a></li>
+							</ul>
 						<hr />
 						
 						<p>
