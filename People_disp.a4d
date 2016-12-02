@@ -1,5 +1,5 @@
 <%
-include("processing/security/checkUReturn.a4d")
+include("processing/security/checkLogin.a4d")
 
 C_POINTER($vTablePtr; $vKeyFieldPtr)
 C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName)
@@ -26,6 +26,11 @@ QUERY($vTablePtr->;$vKeyFieldPtr->=Num(_query{"id"}))
 				<div class="block_content">
 				
 							<p><b>Name:</b> <%=[People]FullName%> </p>
+							<p><b>Unit:</b> <%=[People]Unit%> </p>
+							<p><b>Title:</b> <%=[People]Title%> </p>
+							<p><b>Type:</b> <%=[People]Type%> </p>
+							<p><b>Preferred Name:</b> <%=[People]PreferredName%> </p>
+							<p><b>Comments:</b> <%=[People]Comments%> </p>
 						
 						<hr />
 						

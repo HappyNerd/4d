@@ -28,7 +28,7 @@ else
 	`	Set Session("UMN_Validate";$vtInternetID)
 
 		Case of
-		  : ((Session{"username"}="Timothy Fitzgerald") | (Session{"username"}="Scott Marshall")|(Session{"username"}="Tonu Mikk")|(Session{"username"}="Jon Woodey"))
+		  : ((Session{"username"}="Timothy Fitzgerald") |(Session{"username"}="Tim Fitzgerald")| (Session{"username"}="Scott Marshall")|(Session{"username"}="Tonu Mikk")|(Session{"username"}="Jon Woodey"))
 			Session{"UReturnAccess"}:="True"
 			Session{"StudentAccess"}:="True"
 			Session{"CrossOver"}:="False"
