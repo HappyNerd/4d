@@ -1,3 +1,14 @@
 <%
+Read Write([People])
+Create Record([People])
+iHiInit (->[People];->[People]PeopleID;->[People]DateEntered)
+[People]TimeEntered:=Current time(*)
+[People]Enterer:=Session{"username"}
+[People]FirstName:=_form{"FirstName"}
+[People]LastName:=_form{"LastName"}
+[People]x500:=_form{"UMNEmail"}
+[People]FullName:=[People]FirstName+" "+[People]LastName
 
+Save Record([People])
+redirect("/People_disp.a4d?id="+[People]PeopleID)
 %>

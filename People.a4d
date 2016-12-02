@@ -1,5 +1,5 @@
 <%
-include("processing/security/checkStudent.a4d")
+include("processing/security/checkLogin.a4d")
 
 C_POINTER($vTablePtr;$vKeyFieldPtr)
 C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName)
@@ -8,15 +8,20 @@ $vKeyFieldPtr:=->[People]PeopleID
 $vtTableDisplayName:="People"
 $vtFileName:="People"	`This is the name of the edit page associated with this list
 
+`Session{"UReturnAccess"}:="True"
+`Session{"StudentAccess"}:="True"
+`write(Session{"username"})
+
 If(_query{"search"}="")
 	Query($vTablePtr->;[People]NotPerson=false)
 Else
 	QUERY($vTablePtr->;[People]x500="@"+_query{"search"}+"@";*)
-	`CREATE SET([Students];"x500")
-	
 	QUERY([People];|;[People]FirstName="@"+_query{"search"}+"@";*)
-	QUERY([People]; | ;[People]LastName="@"+_query{"search"}+"@")
-
+	QUERY([People];|;[People]LastName="@"+_query{"search"}+"@";*)
+	QUERY([People];|;[People]Alias1="@"+_query{"search"}+"@";*)
+	QUERY([People];|;[People]Alias2="@"+_query{"search"}+"@";*)
+	QUERY([People];|;[People]Alias3="@"+_query{"search"}+"@";*)
+	QUERY([People]; | ;[People]PreferredName="@"+_query{"search"}+"@")
 End If
 
 ORDER BY($vTablePtr->;[People]LastName;>;[People]FirstName;>)
@@ -68,7 +73,9 @@ $needBatches := $batch->makeLinks($prev; $batches; $next; "?search="+_query{"sea
 							<thead>
 								<tr>
 									<th>Name</th>
-									<td>&nbsp;</td>
+									<th>Case<br>Notes</br></th>
+									<th><%=CHOOSE(Session{"StudentAccess"}="True";"Student";"")%></th>
+									<th><%=CHOOSE(Session{"UReturnAccess"}="True";"Employee";"")%></br></th>								
 								</tr>
 							</thead>
 							
@@ -77,14 +84,31 @@ $needBatches := $batch->makeLinks($prev; $batches; $next; "?search="+_query{"sea
 <%
 	$row := $rs->getRow
 	While ($rs->next)
+	Query([Students];[Students]PeopleLink=$row{"ID"})
+	Query([Employee];[Employee]PeopleLink=$row{"ID"})
 %>
 							
 								<tr>
 									<td><a href="<%=$vtFileName%>_disp.a4d?id=<%=$row{"ID"}%>"><%=[People]FirstName%> <%=[People]LastName%></a></td>
-									<!-- <td><%=[People]FirstName%> <%=[People]LastName%></a></td> -->
-									<td><a href="PplContacts.a4d?PeopleLink=<%=$row{"ID"}%>&__=<%=Random%>">Case Notes</a></td> 
-									<!-- <td><a href="EmpContacts.a4d?EmployeeLink=<%=$row{"ID"}%>&__=<%=Random%>">Case Notes</a></td> -->
-									<!--<td><a href="<%=$vtFileName%>_edit.a4d?id=-3&EmployeeLink=<%=_query{"EmployeeLink"}%>&__=<%=Random%>" class="batch-next">Add Case Note</a></td>-->
+									<td><a href="PplContacts.a4d?PeopleLink=<%=$row{"ID"}%>&__=<%=Random%>">Case Notes</a></td>
+									<td>
+									<%If (Session{"StudentAccess"}="True")%>
+										<%If ([People]StudentRecord=TRUE)%>
+											<a href="Students_disp.a4d?id=<%=[Students]StudentID%>">Record Link</a>
+									   	<%Else%>
+											<button>Create</button>
+									   	<%End If%>
+									<%End If%>
+									</td>
+									<td>
+									<%If (Session{"UReturnAccess"}="True")%>
+										<%If ([People]EmployeeRecord=TRUE)%>
+											<a href="Employee_disp.a4d?id=<%=[Employee]EmployeeID%>">Record Link</a>
+										<%Else%>
+											<button>Create</button>
+										<%End If%>
+									<%End If%>
+									</td>
 								</tr>
 <% End while %>
 							</tbody>

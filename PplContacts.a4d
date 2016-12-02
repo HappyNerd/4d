@@ -1,5 +1,5 @@
 <%
-include("processing/security/checkStudent.a4d")
+include("processing/security/checkLogin.a4d")
 
 C_POINTER($vTablePtr;$vKeyFieldPtr)
 C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName)
@@ -18,7 +18,6 @@ Type: [Consultation]ConsForm;
 CounselorID: [Consultation]PeopleLink"""
 
 QUERY([People];[People]PeopleID=Num(_query{"PeopleLink"}))
-`QUERY([People];[People]PeopleID=[Students]PeopleLink)
 
 include("processing/libraries/output/init.a4d")
 
@@ -74,7 +73,7 @@ $needBatches := $batch->makeLinks($prev; $batches; $next; "?PeopleLink="+_query{
 								<tr>
 									<td><a href="<%=$vtFileName%>_edit.a4d?id=<%=$row{"ID"}%>&PeopleLink=<%=_query{"PeopleLink"}%>&__=<%=Random%>"><%=$row{"Date"}%></a></td>
 									<td><%=$row{"Type"}%></td>
-									<td><%=[People]FullName%></td>
+									<td><%=[Consultation]AttributedTo%></td>
 								</tr>
 <% End while %>
 							</tbody>

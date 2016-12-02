@@ -1,5 +1,5 @@
 <%
-include("processing/security/checkUReturn.a4d")
+include("processing/security/checkLogin.a4d")
 
 C_POINTER($vTablePtr;$vKeyFieldPtr)
 C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName)
@@ -10,20 +10,25 @@ $vtFileName:="PplContacts"	`This is the name of the edit page associated with th
 
 if(_query{"id"}="-3")
 	CREATE RECORD($vTablePtr->)
-	[EmpContacts]StaffLink:=Session{"StaffID"}
-	[EmpContacts]EmployeeLink:=Num(_query{"EmployeeLink"})
-	[EmpContacts]SessionDate:=Current Date
-	[EmpContacts]Enterer:=Session{"username"}
-	QUERY([Employee];[Employee]EmployeeID=Num(_query{"EmployeeLink"}))
-	QUERY([People];[People]PeopleID=[Employee]PeopleLink)
+	[Consultation]ConsultationID:=SequenceNo(->[SequenceNumbers]CurrentID;->[Consultation])
+	[Consultation]DateEntered:=Current Date(*)
+	[Consultation]TimeEntered:=Current Time(*)
+	[Consultation]Enterer:=Session{"username"}
+	[Consultation]PeopleLink:=Num(_query{"PeopleLink"})
+	[Consultation]AttributedTo:=Session{"username"}
+	[Consultation]ConsDate:=Current Date(*)
+	[Consultation]ConsTimeS:=Current Time(*)
+	[Consultation]ConsForm:="Phone"
+	[Consultation]Notes:=""
+
+	QUERY([People];[People]PeopleID=[Consultation]PeopleLink)
 else
 	QUERY($vTablePtr->;$vKeyFieldPtr->=Num(_query{"id"}))
-	QUERY([Employee];[Employee]EmployeeID=Num(_query{"EmployeeLink"}))
-	QUERY([People];[People]PeopleID=[Employee]PeopleLink)
+	QUERY([People];[People]PeopleID=[Consultation]PeopleLink)
 end if
 
-ARRAY TEXT(atPplContactsListType;0)
-LIST TO ARRAY("PplContactTypes";atPplContactsListType)
+ARRAY TEXT(atOutConsF;0)
+LIST TO ARRAY("cOutreachConsF";atOutConsF)
 
 %>
 
@@ -50,14 +55,14 @@ LIST TO ARRAY("PplContactTypes";atPplContactsListType)
 						
 						<p>
 							<label for="type">Type:</label><br />
-							<select id="type" name="SessionType">
-								<% a4d.web.buildOptionsFromArrays(atPplContactsListType;atPplContactsListType;0;[Consultation]ConsType)%>
+							<select id="type" name="ContactType">
+								<% a4d.web.buildOptionsFromArrays(atOutConsF; atOutConsF;0;[Consultation]ConsForm)%>
 							</select>
 						</p>
 						
 						<p>
 							<label for="casenote">Case Notes:</label><br />
-							<textarea id="casenote" name="Notes"><%=[Consultation]Notes%></textarea>
+							<textarea id="casenote" name="CaseNotes"><%=[Consultation]Notes%></textarea>
 						</p>
 						
 						<hr />

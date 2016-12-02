@@ -1,0 +1,29 @@
+<%
+Read Write([Consultation])
+
+if(_form{"id"}="-3")
+	CREATE RECORD([Consultation])
+	[Consultation]ConsultationID:=SequenceNo(->[SequenceNumbers]CurrentID;->[Consultation])
+	[Consultation]DateEntered:=Current Date(*)
+	[Consultation]TimeEntered:=Current Time(*)
+	[Consultation]Enterer:=Session{"username"}
+	[Consultation]PeopleLink:=Num(_form{"PeopleLink"})
+	[Consultation]AttributedTo:=Session{"username"}
+	[Consultation]ConsDate:=Current Date(*)
+	[Consultation]ConsTimeS:=Current Time(*)
+	[Consultation]ConsForm:="Phone"
+else
+	QUERY([Consultation];[Consultation]ConsultationID=Num(_form{"id"}))
+end if
+
+[Consultation]ConsForm:=_form{"ContactType"}
+[Consultation]Notes:=_form{"CaseNotes"}
+[Consultation]ConsDate:=Date(_form{"SessionDate"})
+[Consultation]DateModified:=Current Date(*)
+[Consultation]TimeModified:=Current Time(*)
+[Consultation]ConsTimeE:=Current time(*)
+[Consultation]Modifier:=Session{"username"}
+SAVE RECORD([Consultation])
+
+redirect("/PplContacts.a4d?PeopleLink="+String([Consultation]PeopleLink))
+%>
