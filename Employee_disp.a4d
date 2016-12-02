@@ -5,8 +5,10 @@ C_POINTER($vTablePtr;$vKeyFieldPtr)
 C_TEXT($vtTableDisplayName;$vtTableName;$vtFileName;$vtEmpStatus)
 $vTablePtr:=->[Employee]
 $vKeyFieldPtr:=->[Employee]EmployeeID
-$vtTableDisplayName:="Emplopyee File"
+$vtTableDisplayName:="Employee File"
 $vtFileName:="Employee"	`This is the name of the edit page associated with this list
+
+`write("ID: "+string(Num(_form{"id"})))
 
 QUERY($vTablePtr->;$vKeyFieldPtr->=Num(_query{"id"}))
 QUERY([People];[People]PeopleID=[Employee]PeopleLink)
